@@ -10,7 +10,7 @@ jobs:
       - uses: actions/setup-node@v1
       - run: npm install
       - run: curl https://cli-assets.heroku.com/install.sh | sh
-      heroku -v
+      - run: heroku -v
 
 
 
