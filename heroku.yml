@@ -1,4 +1,0 @@
-ld:
-  docker:
-    web: Dockerfile
-
