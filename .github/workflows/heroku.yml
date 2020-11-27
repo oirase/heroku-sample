@@ -2,6 +2,11 @@ name: heroku
 
 on: [ push ]
 
+env:
+  DOCKER_BUILDKIT: 1
+  IMAGE_NAME: sample_app
+  IMAGE_TAG: test
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,16 +16,9 @@ jobs:
       - name: Node, npm setup
         uses: actions/setup-node@v1
       - run: npm install
-      - name: Docker build
-        run: |
-          docker build -t heroku-sample:1.0 .
-          docker image ls -a
-          touch test01.txt
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: my-artifact
-          path: test01.txt
+      - name: Docker login
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u oirase --password-stdin
+
 
   heroku-access:
     needs: build
@@ -32,11 +30,7 @@ jobs:
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
           heroku -v
-      - name: Download a artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: my-artifact
-      - run: ls
+
 
 
 
