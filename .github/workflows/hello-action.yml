@@ -7,7 +7,7 @@ jobs:
     steps:
     - name: Hello world action step
       id: hello
-      uses: oirase/hello-world-docker-action
+      uses: oirase/hello-world-docker-action@v2
       with:
         who-to-greet: 'Mona the Octocat'
     - name: Get the output time
