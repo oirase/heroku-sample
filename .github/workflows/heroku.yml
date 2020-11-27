@@ -6,19 +6,37 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-      - run: npm install
-      - run: docker build -t heroku-sample:1.0 .
-
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Node, npm setup
+        uses: actions/setup-node@v1
+        run: npm install
+      - name: Docker build
+        run: |
+          docker build -t heroku-sample:1.0 .
+          docker image ls -a
+          touch test01.txt
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Artifacts test
+          path: test01.txt
 
   heroku-access:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: curl https://cli-assets.heroku.com/install.sh | sh
-      - run: heroku -v
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Heroku setup
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+          heroku -v
+      - name: Download a artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: my-artifact
+        run: ls
 
 
 
