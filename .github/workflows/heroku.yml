@@ -39,7 +39,7 @@ jobs:
               login ${{ secrets.HEROKU_USER }}
               password ${{ secrets.HEROKU_APIKEY }}
           EOF`
-          cat ~/.netrc
+          heroku container:login
 
 
 
