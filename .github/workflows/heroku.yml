@@ -33,11 +33,11 @@ jobs:
         run: |
           `cat >~/.netrc <<EOF
           machine api.heroku.com
-              login ${email}
-              password ${api_key}
+              login ${{ secrets.HEROKU_USER }}
+              password ${{ secrets.HEROKU_APIKEY }}
           machine git.heroku.com
-              login ${email}
-              password ${api_key}
+              login ${{ secrets.HEROKU_USER }}
+              password ${{ secrets.HEROKU_APIKEY }}
           EOF`
           cat ~/.netrc
 
