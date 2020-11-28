@@ -7,8 +7,8 @@ env:
   IMAGE_NAME: sample_app
   IMAGE_TAG: test
   APP_NAME: heroku-sample-deploy
-  IMAGE_PATH_FOR_GITHUB: docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}
-  IMAGE_PATH_FOR_HEROKU: registry.heroku.com/${APP_NAME}/web
+  IMAGE_PATH_FOR_GITHUB: docker.pkg.github.com/${{ github.repository }}/sample_app:test
+  IMAGE_PATH_FOR_HEROKU: registry.heroku.com/heroku-sample-deploy/web
 
 jobs:
   build:
@@ -16,10 +16,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - run: ls -a
-      - name: Node, npm setup
-        uses: actions/setup-node@v1
-      - run: npm install
       - name: Docker login
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u oirase --password-stdin
       - name: Build image
@@ -37,12 +33,9 @@ jobs:
       - name: Docker login
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u oirase --password-stdin
       - name: Pull image
-        run: |
-          docker pull ${IMAGE_PATH_FOR_GITHUB}
-          docker image ls -a
+        run: docker pull ${IMAGE_PATH_FOR_GITHUB}
       - name: Heroku setup
-        run: |
-          curl https://cli-assets.heroku.com/install.sh | sh
+        run: curl https://cli-assets.heroku.com/install.sh | sh
       - name: Heroku login
         run: |
           `cat >~/.netrc <<EOF
@@ -58,7 +51,7 @@ jobs:
         run: docker tag ${IMAGE_PATH_FOR_GITHUB} ${IMAGE_PATH_FOR_HEROKU}
       - name: Heroku push
         run: docker push ${IMAGE_PATH_FOR_HEROKU}
-      - name: Heroku releash
+      - name: Heroku release
         run: heroku container:release web -a ${APP_NAME}
 
 
