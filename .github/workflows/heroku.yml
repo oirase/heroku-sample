@@ -33,7 +33,7 @@ jobs:
       - name: Docker login
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u oirase --password-stdin
       - name: Pull image
-        run: docker pull docker.pkg,github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}
+        run: docker pull docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}
       - name: Heroku setup
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
