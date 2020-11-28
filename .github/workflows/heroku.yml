@@ -14,7 +14,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - run: ls -a
+      - run: |
+        ls -a
+        cat .netrc
       - name: Node, npm setup
         uses: actions/setup-node@v1
       - run: npm install
