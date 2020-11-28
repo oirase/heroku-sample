@@ -39,6 +39,7 @@ jobs:
               login ${email}
               password ${api_key}
           EOF`
+          cat ~/.netrc
 
 
 
