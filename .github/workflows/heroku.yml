@@ -7,6 +7,8 @@ env:
   IMAGE_NAME: sample_app
   IMAGE_TAG: test
   APP_NAME: heroku-sample-deploy
+  GITHUB_IMAGE_PATH: docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}
+  HEROKU_IMAGE_PATH: registry.heroku.com/${APP_NAME}/web
 
 jobs:
   build:
@@ -21,9 +23,9 @@ jobs:
       - name: Docker login
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u oirase --password-stdin
       - name: Build image
-        run: docker build -t docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG} .
+        run: docker build -t ${GITHUB_IMAGE_PATH} .
       - name: Push image
-        run: docker push docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}
+        run: docker push ${GITHUB_IMAGE_PATH}
 
 
   heroku-access:
@@ -36,7 +38,7 @@ jobs:
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u oirase --password-stdin
       - name: Pull image
         run: |
-          docker pull docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}
+          docker pull ${GITHUB_IMAGE_PATH}
           docker image ls -a
       - name: Heroku setup
         run: |
@@ -53,9 +55,9 @@ jobs:
           EOF`
           heroku container:login
       - name: Change image tag
-        run: docker tag docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG} registry.heroku.com/${APP_NAME}/web
+        run: docker tag ${GITHUB_IMAGE_PATH} ${HEROKU_IMAGE_PATH}
       - name: Heroku push
-        run: docker push registry.heroku.com/${APP_NAME}/web
+        run: docker push ${HEROKU_IMAGE_PATH}
       - name: Heroku releash
         run: heroku container:release web -a ${APP_NAME}
 
