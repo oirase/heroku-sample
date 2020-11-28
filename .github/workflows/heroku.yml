@@ -6,6 +6,7 @@ env:
   DOCKER_BUILDKIT: 1
   IMAGE_NAME: sample_app
   IMAGE_TAG: test
+  APP_NAME:
 
 jobs:
   build:
@@ -34,10 +35,15 @@ jobs:
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u oirase --password-stdin
       - name: Pull image
         run: docker pull docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}
+        docker image ls -a
       - name: Heroku setup
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
           heroku -v
+          heroku container:login
+
+
+
 
 
 
