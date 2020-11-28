@@ -14,15 +14,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - run: ls -a
       - name: Node, npm setup
         uses: actions/setup-node@v1
       - run: npm install
-      - name: Docker login
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u oirase --password-stdin
-      - name: Build image
-        run: docker build -t docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG} .
-      - name: Push image
-        run: docker push docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}
 
 
   heroku-access:
@@ -31,12 +26,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Docker login
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u oirase --password-stdin
-      - name: Pull image
-        run: |
-          docker pull docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:${IMAGE_TAG}
-          docker image ls -a
       - name: Heroku setup
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
