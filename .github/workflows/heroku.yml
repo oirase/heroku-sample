@@ -17,6 +17,7 @@ jobs:
       - run: |
         ls -a
         cat .netrc
+        pwd
       - name: Node, npm setup
         uses: actions/setup-node@v1
       - run: npm install
