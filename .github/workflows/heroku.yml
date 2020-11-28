@@ -4,11 +4,7 @@ on: [ push ]
 
 env:
   DOCKER_BUILDKIT: 1
-  IMAGE_NAME: sample_app
-  IMAGE_TAG: test
   APP_NAME: heroku-sample-deploy
-  IMAGE_PATH_FOR_GITHUB: docker.pkg.github.com/${{ github.repository }}/sample_app:test
-  IMAGE_PATH_FOR_HEROKU: registry.heroku.com/heroku-sample-deploy/web
 
 jobs:
   build:
@@ -16,24 +12,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Docker login
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u oirase --password-stdin
-      - name: Build image
-        run: docker build -t ${IMAGE_PATH_FOR_GITHUB} .
-      - name: Push image
-        run: docker push ${IMAGE_PATH_FOR_GITHUB}
-
-
-  heroku-access:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Docker login
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u oirase --password-stdin
-      - name: Pull image
-        run: docker pull ${IMAGE_PATH_FOR_GITHUB}
       - name: Heroku setup
         run: curl https://cli-assets.heroku.com/install.sh | sh
       - name: Heroku login
@@ -47,10 +25,8 @@ jobs:
               password ${{ secrets.HEROKU_APIKEY }}
           EOF`
           heroku container:login
-      - name: Change image tag
-        run: docker tag ${IMAGE_PATH_FOR_GITHUB} ${IMAGE_PATH_FOR_HEROKU}
       - name: Heroku push
-        run: docker push ${IMAGE_PATH_FOR_HEROKU}
+        run: heroku container:push web -a ${APP_NAME}
       - name: Heroku release
         run: heroku container:release web -a ${APP_NAME}
 

@@ -13,7 +13,7 @@ if (
 const port = process.argv[2]
 
 app.use('/', (req, res) => {
-  res.send("node test hello")
+  res.send("node test app hello")
 })
 app.listen(port, '0.0.0.0', () => {
   console.log('Server listen on port ' + port);
