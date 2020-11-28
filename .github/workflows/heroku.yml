@@ -14,10 +14,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - run: |
-        ls -a
-        cat .netrc
-        pwd
+      - name: Check file list
+        run: |
+          ls -a
+          cat .netrc
+          pwd
       - name: Node, npm setup
         uses: actions/setup-node@v1
       - run: npm install
