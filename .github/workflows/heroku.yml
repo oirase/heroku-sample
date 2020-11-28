@@ -30,14 +30,15 @@ jobs:
           curl https://cli-assets.heroku.com/install.sh | sh
           heroku -v
       - name: Heroku login
-        run: `cat >~/.netrc <<EOF
-machine api.heroku.com
-    login ${email}
-    password ${api_key}
-machine git.heroku.com
-    login ${email}
-    password ${api_key}
-EOF`
+        run: |
+          `cat >~/.netrc <<EOF
+          machine api.heroku.com
+              login ${email}
+              password ${api_key}
+          machine git.heroku.com
+              login ${email}
+              password ${api_key}
+          EOF`
 
 
 
