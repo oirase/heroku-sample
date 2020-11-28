@@ -14,11 +14,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Check file list
-        run: |
-          ls -a
-          cat .netrc
-          pwd
       - name: Node, npm setup
         uses: actions/setup-node@v1
       - run: npm install
@@ -34,6 +29,15 @@ jobs:
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
           heroku -v
+      - name: Heroku login
+        run: `cat >~/.netrc <<EOF
+machine api.heroku.com
+    login ${email}
+    password ${api_key}
+machine git.heroku.com
+    login ${email}
+    password ${api_key}
+EOF`
 
 
 
